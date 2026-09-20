@@ -1,0 +1,19 @@
+name: Quality
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GATEWAY_API_URL: http://127.0.0.1:8080
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm knip
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e

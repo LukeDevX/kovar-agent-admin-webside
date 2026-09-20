@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+:root {
+  color-scheme: light dark;
+  --background: #f6f7f9;
+  --foreground: #17212e;
+  --card: #ffffff;
+  --muted: #edf0f4;
+  --muted-foreground: #5d6878;
+  --border: #dce2e9;
+  --input: #cbd3dd;
+  --primary: #22604f;
+  --primary-foreground: #ffffff;
+  --destructive: #b42330;
+  --ring: #31826a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #10151c;
+    --foreground: #e5eaf0;
+    --card: #171e27;
+    --muted: #232d39;
+    --muted-foreground: #a1adbd;
+    --border: #303c4b;
+    --input: #415063;
+    --primary: #8bd2b6;
+    --primary-foreground: #102a22;
+    --destructive: #d74452;
+    --ring: #8bd2b6;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --font-sans: Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+  select,
+  textarea {
+    background: var(--card);
+    color: var(--foreground);
+  }
+  button:not(:disabled),
+  select {
+    cursor: pointer;
+  }
+  a:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+}
