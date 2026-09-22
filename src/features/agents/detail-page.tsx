@@ -61,7 +61,7 @@ export async function AgentDetailPage({ id }: { id: string }) {
       </Link>
       <PageHeading
         title="Agent 详情"
-        description="访问授权、账户绑定与预算策略。时间以 UTC 显示。"
+        description="访问授权、账户绑定与预算策略。时间以北京时间显示。"
         action={<RefreshButton />}
       />
       <div className="mb-6 flex items-center gap-2 rounded-lg border bg-card px-4 py-3">

@@ -20,7 +20,7 @@ export function AgentTable({ agents }: { agents: AgentSummary[] }) {
   return (
     <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="w-full whitespace-nowrap text-left text-sm">
-        <caption className="sr-only">Agent 列表，时间以 UTC 显示</caption>
+        <caption className="sr-only">Agent 列表，时间以北京时间显示</caption>
         <thead className="border-b bg-muted/50 text-xs text-muted-foreground">
           <tr>
             {[
@@ -29,7 +29,7 @@ export function AgentTable({ agents }: { agents: AgentSummary[] }) {
               '白名单',
               'Kovar 用户',
               '今日 / 本月用量',
-              '注册时间 (UTC)',
+              '注册时间 (北京时间)',
               '操作',
             ].map((title) => (
               <th scope="col" key={title} className="px-4 py-3 font-medium">
