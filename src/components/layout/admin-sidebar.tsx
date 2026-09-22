@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bot, House, ListChecks, Menu, ShieldCheck, X } from 'lucide-react'
+import { House, ListChecks, Menu, ShieldCheck, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useState } from 'react'
 
@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils'
 
 const NAVIGATION = [
   { href: '/', label: '工作台', icon: House },
-  { href: '/agents', label: 'Agents', icon: Bot },
   { href: '/whitelist', label: '白名单审核', icon: ListChecks },
 ]
 
