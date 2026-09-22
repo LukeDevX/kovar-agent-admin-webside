@@ -2,10 +2,30 @@ import type { NextConfig } from 'next'
 
 import { getServerEnv } from './src/config/env.server'
 
-getServerEnv()
+const env = getServerEnv()
+
+// Optional comma-separated host[:port] list. Required when the app is reached via
+// an IP address or a reverse proxy that rewrites the Host/Origin headers, so the
+// Server Actions CSRF check can still match the real origin.
+const allowedOrigins = (env.ALLOWED_ORIGINS ?? '')
+  .split(',')
+  .map((origin) =>
+    origin
+      .trim()
+      .replace(/^https?:\/\//, '')
+      .replace(/\/.*$/, ''),
+  )
+  .filter(Boolean)
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   poweredByHeader: false,
+  allowedDevOrigins: allowedOrigins.map((origin) => origin.replace(/:\d+$/, '')),
+  experimental: {
+    serverActions: {
+      allowedOrigins,
+    },
+  },
   async headers() {
     return [
       {

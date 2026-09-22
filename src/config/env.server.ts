@@ -13,6 +13,9 @@ const envSchema = z.object({
     )
   }, 'GATEWAY_API_URL 必须是无凭据、路径或查询参数的 HTTP(S) 服务地址'),
   GATEWAY_TIMEOUT_MS: z.coerce.number().int().min(1000).max(300000).default(135000),
+  // 可选。逗号分隔的 host[:port] 来源，允许其调用 Server Actions。
+  // 当应用通过 IP 或反向代理访问、且代理改写了 Host/Origin 头时需要。
+  ALLOWED_ORIGINS: z.string().optional(),
 })
 
 export function getServerEnv() {

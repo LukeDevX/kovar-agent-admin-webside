@@ -73,13 +73,23 @@ Vitest 验证真实接口契约、int64 精度、字节长度、状态转换、H
 
 ## 部署
 
-```sh
-pnpm install --frozen-lockfile
-pnpm build
-pnpm start
+```bash
+docker build --target check -t kovar-agent-admin-check .
+docker build -t kovar-agent-admin:local .
+docker run --rm -p 127.0.0.1:3000:3000 \
+  --add-host host.docker.internal:host-gateway \
+  -e GATEWAY_API_URL=http://host.docker.internal:8080 \
+  kovar-agent-admin:local
 ```
 
-部署为 Node 服务，设置 `GATEWAY_API_URL`，通过 HTTPS 反向代理对外提供访问。生产 Cookie 设置 Secure/HttpOnly/SameSite=Strict，需 HTTPS。反向代理保留正确的 Host/Origin，服务端超时至少覆盖 Gateway 的请求超时。远程 Gateway 使用 HTTPS 或受信任私有网络；不需要配置浏览器 CORS。此交付未向任何生产环境部署。
+生产镜像使用 Next.js standalone 输出、Node 非 root 用户和镜像内健康检查。`GATEWAY_API_URL`
+只在服务端使用，同机 Compose 部署应设为 `http://gateway:8080`，不需要向浏览器公开 Gateway。
+完整的 AWS EC2、PostgreSQL、Nginx 和 HTTPS 步骤见同级 `kovar-agent-gateway/deploy/README.md`。
+
+生产 Cookie 设置 Secure/HttpOnly/SameSite=Strict，因此登录必须使用 HTTPS；HTTP 只适合证书签发前的健康检查。
+反向代理应保留公网 `Host`/`X-Forwarded-Host` 和 `X-Forwarded-Proto`。若代理无法保留公网 Host，
+才需在构建时通过 `ALLOWED_ORIGINS` 配置额外的 `host[:port]`。远程 Gateway 必须使用 HTTPS 或受信任私有网络。
+此交付未向任何生产环境部署。
 
 Next.js Server Actions 校验来源，所有管理读写最终由 Gateway 验证 Bearer Token。退出操作仅清理当前浏览器 Cookie：Gateway 没有注销/撤销会话接口，上游会话到期前仍有效。Gateway 登录限流按直连 IP，多用户前端共享出口 IP 的限流窗口。不要将 Token、密码写入 URL、日志或 Local Storage。
 
