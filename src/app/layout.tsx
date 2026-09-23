@@ -7,7 +7,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: { default: 'Kovar Agent Admin', template: '%s · Kovar Admin' },
-  description: 'Kovar Agent 管理控制台',
+  description: 'Kovar Agent Admin Console',
   robots: { index: false, follow: false },
 }
 

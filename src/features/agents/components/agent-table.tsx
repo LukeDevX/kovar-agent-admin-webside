@@ -11,26 +11,26 @@ export function AgentTable({ agents }: { agents: AgentSummary[] }) {
     return (
       <div className="rounded-lg border bg-card px-6 py-16 text-center">
         <Bot className="mx-auto mb-4 size-8 text-muted-foreground" />
-        <h2 className="font-medium">暂无 Agent</h2>
+        <h2 className="font-medium">No Agents</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          当前页没有记录，可调整筛选条件或返回上一页。
+          This page has no records. Adjust the filters or go back a page.
         </p>
       </div>
     )
   return (
     <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="w-full whitespace-nowrap text-left text-sm">
-        <caption className="sr-only">Agent 列表，时间以北京时间显示</caption>
+        <caption className="sr-only">Agent list; times are shown in Beijing time</caption>
         <thead className="border-b bg-muted/50 text-xs text-muted-foreground">
           <tr>
             {[
-              'Agent 地址',
-              '运行状态',
-              '白名单',
-              'Kovar 用户',
-              '今日 / 本月用量',
-              '注册时间 (北京时间)',
-              '操作',
+              'Agent address',
+              'Runtime status',
+              'Whitelist',
+              'Kovar user',
+              'Today / month usage',
+              'Registered at (Beijing time)',
+              'Actions',
             ].map((title) => (
               <th scope="col" key={title} className="px-4 py-3 font-medium">
                 {title}
@@ -56,7 +56,7 @@ export function AgentTable({ agents }: { agents: AgentSummary[] }) {
               <td className="px-4 py-4">
                 <StatusBadge status={agent.whitelist_status} />
               </td>
-              <td className="px-4 py-4 font-mono text-xs">{agent.kovar_user_id ?? '未绑定'}</td>
+              <td className="px-4 py-4 font-mono text-xs">{agent.kovar_user_id ?? 'Not bound'}</td>
               <td className="px-4 py-4 font-mono text-xs tabular-nums">
                 {formatInteger(agent.today_usage)}
                 <span className="px-2 text-muted-foreground">/</span>
@@ -68,10 +68,10 @@ export function AgentTable({ agents }: { agents: AgentSummary[] }) {
               <td className="px-4 py-4">
                 <Link
                   href={`/agents/${agent.agent_id}`}
-                  aria-label={`查看 ${agent.agent_id} 详情`}
+                  aria-label={`View ${agent.agent_id} details`}
                   className="inline-flex items-center gap-1 text-xs font-medium text-primary"
                 >
-                  详情
+                  Details
                   <ChevronRight className="size-3" />
                 </Link>
               </td>

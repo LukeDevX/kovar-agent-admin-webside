@@ -11,10 +11,10 @@ const envSchema = z.object({
       !url.hash &&
       url.pathname === '/'
     )
-  }, 'GATEWAY_API_URL 必须是无凭据、路径或查询参数的 HTTP(S) 服务地址'),
+  }, 'GATEWAY_API_URL must be an HTTP(S) service URL without credentials, path, or query parameters'),
   GATEWAY_TIMEOUT_MS: z.coerce.number().int().min(1000).max(300000).default(135000),
-  // 可选。逗号分隔的 host[:port] 来源，允许其调用 Server Actions。
-  // 当应用通过 IP 或反向代理访问、且代理改写了 Host/Origin 头时需要。
+  // Optional. Comma-separated host[:port] origins allowed to call Server Actions.
+  // Needed when the app is accessed through an IP or reverse proxy that rewrites Host/Origin headers.
   ALLOWED_ORIGINS: z.string().optional(),
 })
 
@@ -22,7 +22,7 @@ export function getServerEnv() {
   const parsed = envSchema.safeParse(process.env)
   if (!parsed.success) {
     throw new Error(
-      'Gateway 环境配置缺失或无效。请按照 .env.example 配置 GATEWAY_API_URL 和 GATEWAY_TIMEOUT_MS。',
+      'Gateway environment configuration is missing or invalid. Configure GATEWAY_API_URL and GATEWAY_TIMEOUT_MS as described in .env.example.',
     )
   }
   return parsed.data

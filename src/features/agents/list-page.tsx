@@ -25,11 +25,11 @@ export async function AgentListPage({
   })
   const heading = (
     <PageHeading
-      title={resource === 'agents' ? 'Agents' : '白名单审核'}
+      title={resource === 'agents' ? 'Agents' : 'Whitelist review'}
       description={
         resource === 'agents'
-          ? '查看已注册的 Agent、运行状态与使用情况。'
-          : '查看审核队列，管理 Agent 访问授权。'
+          ? 'View registered Agents, their runtime status, and usage.'
+          : 'Review the queue and manage Agent access authorization.'
       }
       action={<RefreshButton />}
     />
@@ -65,7 +65,8 @@ export async function AgentListPage({
         />
         <AgentTable agents={result.items} />
         <p className="text-xs text-muted-foreground">
-          按注册时间倒序排列。用量为 Kovar quota units，以 UTC 日 / 月累计；未结算任务计入估算值。
+          Sorted by registration time in descending order. Usage is measured in Kovar quota units,
+          aggregated by UTC day/month; unsettled tasks are included in estimates.
         </p>
       </div>
     </>

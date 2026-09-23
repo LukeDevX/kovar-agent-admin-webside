@@ -49,7 +49,7 @@ export function ListControls({
         {resource === 'whitelist' && (
           <div>
             <label htmlFor="status" className="mb-1 block text-xs text-muted-foreground">
-              审核状态
+              Review status
             </label>
             <select
               id="status"
@@ -58,17 +58,17 @@ export function ListControls({
               className="h-9 rounded-md border px-3 text-sm"
               disabled={pending}
             >
-              <option value="">全部状态</option>
-              <option value="PENDING">待审核</option>
-              <option value="APPROVED">已批准</option>
-              <option value="REJECTED">已拒绝</option>
-              <option value="REVOKED">已撤销</option>
+              <option value="">All statuses</option>
+              <option value="PENDING">Pending</option>
+              <option value="APPROVED">Approved</option>
+              <option value="REJECTED">Rejected</option>
+              <option value="REVOKED">Revoked</option>
             </select>
           </div>
         )}
         <div>
           <label htmlFor="page_size" className="mb-1 block text-xs text-muted-foreground">
-            每页条数
+            Rows per page
           </label>
           <select
             id="page_size"
@@ -87,12 +87,12 @@ export function ListControls({
           </select>
         </div>
         <Button variant="outline" type="submit" disabled={pending}>
-          应用
+          Apply
         </Button>
       </form>
       <div className="flex items-center gap-3 text-sm">
         <span aria-live="polite" className="text-muted-foreground">
-          第 {query.page} 页 · 本页 {count} 条
+          Page {query.page} · {count} rows
         </span>
         <Button
           variant="outline"
@@ -100,7 +100,7 @@ export function ListControls({
           disabled={pending || query.page === 1}
           onClick={() => navigate({ page: query.page - 1 })}
         >
-          上一页
+          Previous page
         </Button>
         <Button
           variant="outline"
@@ -108,7 +108,7 @@ export function ListControls({
           disabled={pending || count < query.page_size || query.page >= 1000000}
           onClick={() => navigate({ page: query.page + 1 })}
         >
-          下一页
+          Next page
         </Button>
       </div>
     </div>

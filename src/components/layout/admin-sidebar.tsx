@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const NAVIGATION = [
-  { href: '/', label: '工作台', icon: House },
-  { href: '/whitelist', label: '白名单审核', icon: ListChecks },
+  { href: '/', label: 'Dashboard', icon: House },
+  { href: '/whitelist', label: 'Whitelist review', icon: ListChecks },
 ]
 
 function Navigation({ onNavigate }: { onNavigate?: () => void }) {
@@ -27,8 +27,8 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
           <p className="text-xs text-muted-foreground">Agent Admin</p>
         </div>
       </div>
-      <p className="px-6 pb-3 pt-5 text-xs font-medium text-muted-foreground">管理空间</p>
-      <nav aria-label="主导航" className="space-y-1 px-3">
+      <p className="px-6 pb-3 pt-5 text-xs font-medium text-muted-foreground">Admin area</p>
+      <nav aria-label="Main navigation" className="space-y-1 px-3">
         {NAVIGATION.map(({ href, label, icon: Icon }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (
@@ -61,26 +61,26 @@ export function AdminSidebar() {
         <div className="absolute bottom-6 px-6 text-xs text-muted-foreground">
           Kovar Agent Gateway
           <br />
-          <span className="mt-1 inline-block">管理控制台</span>
+          <span className="mt-1 inline-block">Admin Console</span>
         </div>
       </aside>
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden" aria-label="打开导航">
+          <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open navigation">
             <Menu />
           </Button>
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50" />
           <Dialog.Content className="fixed inset-y-0 left-0 z-50 w-72 bg-card shadow-xl">
-            <Dialog.Title className="sr-only">管理导航</Dialog.Title>
-            <Dialog.Description className="sr-only">选择一个管理模块</Dialog.Description>
+            <Dialog.Title className="sr-only">Admin navigation</Dialog.Title>
+            <Dialog.Description className="sr-only">Choose an admin module</Dialog.Description>
             <Navigation onNavigate={() => setOpen(false)} />
             <Dialog.Close asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="关闭导航"
+                aria-label="Close navigation"
                 className="absolute right-2 top-2"
               >
                 <X />

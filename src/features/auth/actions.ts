@@ -10,7 +10,7 @@ import { loginSchema, loginResponseSchema } from './schemas'
 
 export async function login(input: unknown): Promise<ActionResult> {
   const parsed = loginSchema.safeParse(input)
-  if (!parsed.success) return { ok: false, message: '请检查用户名和密码。' }
+  if (!parsed.success) return { ok: false, message: 'Please check your username and password.' }
   try {
     const session = await gateway('/login', loginResponseSchema, {
       method: 'POST',

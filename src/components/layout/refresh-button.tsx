@@ -16,7 +16,7 @@ export function RefreshButton() {
       onClick={() => startTransition(() => router.refresh())}
     >
       <RefreshCw className={pending ? 'motion-safe:animate-spin' : ''} />
-      {pending ? '刷新中' : '刷新'}
+      {pending ? 'Refreshing...' : 'Refresh'}
     </Button>
   )
 }

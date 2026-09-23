@@ -6,19 +6,22 @@ import { PageHeading } from '@/components/layout/page-heading'
 export default function HomePage() {
   return (
     <>
-      <PageHeading title="工作台" description="管理 Agent 访问权限、审核白名单与调整使用预算。" />
+      <PageHeading
+        title="Dashboard"
+        description="Manage Agent access, review the whitelist, and adjust usage budgets."
+      />
       <div className="grid gap-4 lg:grid-cols-2">
         {[
           {
             href: '/agents',
             title: 'Agents',
-            description: '查看注册信息、账户绑定、用量与预算。',
+            description: 'View registration details, account bindings, usage, and budgets.',
             icon: Bot,
           },
           {
             href: '/whitelist',
-            title: '白名单审核',
-            description: '按审核状态查看 Agent，处理访问授权。',
+            title: 'Whitelist review',
+            description: 'Review Agents by status and manage access authorization.',
             icon: ListChecks,
           },
         ].map(({ href, title, description, icon: Icon }) => (

@@ -10,13 +10,13 @@ export function CopyAddress({ address }: { address: string }) {
     <Button
       variant="ghost"
       size="icon"
-      aria-label="复制 Agent 地址"
+      aria-label="Copy Agent address"
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(address)
-          toast.success('地址已复制')
+          toast.success('Address copied')
         } catch {
-          toast.error('复制失败，请手动选择地址复制。')
+          toast.error('Copy failed. Select the address and copy it manually.')
         }
       }}
     >

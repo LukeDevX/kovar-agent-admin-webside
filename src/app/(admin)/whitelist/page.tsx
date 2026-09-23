@@ -1,6 +1,6 @@
 import { AgentListPage } from '@/features/agents/list-page'
 
-export const metadata = { title: '白名单审核' }
+export const metadata = { title: 'Whitelist review' }
 
 export default function WhitelistPage({
   searchParams,

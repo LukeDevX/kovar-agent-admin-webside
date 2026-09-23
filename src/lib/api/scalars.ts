@@ -8,5 +8,5 @@ export const integerSchema = z
       /^-?\d+$/.test(value) &&
       BigInt(value) >= -9223372036854775808n &&
       BigInt(value) <= 9223372036854775807n,
-    '超出 int64 范围',
+    'Value is out of int64 range',
   )

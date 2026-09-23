@@ -30,7 +30,10 @@ export async function updateBudget(id: unknown, input: unknown): Promise<ActionR
   const address = addressSchema.safeParse(id)
   const policy = policySchema.safeParse(input)
   if (!address.success || !policy.success)
-    return { ok: false, message: '地址或预算无效，请输入非负 int64 整数。' }
+    return {
+      ok: false,
+      message: 'Invalid address or budget. Enter a non-negative int64 integer.',
+    }
   try {
     await gateway(`/agents/${encodeURIComponent(address.data)}/budget`, policySchema, {
       method: 'PUT',
@@ -52,7 +55,10 @@ export async function reviewAgent(
   const operation = reviewActionSchema.safeParse(action)
   const body = reviewSchema.safeParse(input)
   if (!address.success || !operation.success || !body.success)
-    return { ok: false, message: '操作参数无效，备注不能超过 1000 UTF-8 字节。' }
+    return {
+      ok: false,
+      message: 'Invalid operation parameters. The remark must not exceed 1000 UTF-8 bytes.',
+    }
   try {
     const result = await gateway(
       `/agents/${encodeURIComponent(address.data)}/${operation.data}`,
@@ -63,7 +69,10 @@ export async function reviewAgent(
     return {
       ok: true,
       ...(result.token_deletion_pending
-        ? { warning: 'Agent 授权已撤销，但上游 Token 删除尚未完成。可再次执行撤销授权以重试清理。' }
+        ? {
+            warning:
+              'Agent authorization has been revoked, but upstream token deletion is still pending. Run Revoke access again to retry cleanup.',
+          }
         : {}),
     }
   } catch (error) {

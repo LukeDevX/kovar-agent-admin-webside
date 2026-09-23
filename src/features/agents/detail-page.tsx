@@ -57,11 +57,11 @@ export async function AgentDetailPage({ id }: { id: string }) {
         className="mb-5 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="size-4" />
-        返回 Agent 列表
+        Back to Agent list
       </Link>
       <PageHeading
-        title="Agent 详情"
-        description="访问授权、账户绑定与预算策略。时间以北京时间显示。"
+        title="Agent details"
+        description="Access authorization, account bindings, and budget policy. Times are shown in Beijing time."
         action={<RefreshButton />}
       />
       <div className="mb-6 flex items-center gap-2 rounded-lg border bg-card px-4 py-3">
@@ -70,61 +70,68 @@ export async function AgentDetailPage({ id }: { id: string }) {
       </div>
       <div className="space-y-5">
         <div className="grid items-start gap-5 xl:grid-cols-2">
-          <Section title="基础信息">
+          <Section title="Basic information">
             <Details
               fields={[
-                { label: '运行状态', value: <StatusBadge status={agent.agent_status} /> },
-                { label: '白名单状态', value: <StatusBadge status={agent.whitelist_status} /> },
-                { label: '注册时间', value: formatDate(agent.created_at) },
-                { label: '最后访问', value: formatDate(agent.last_seen_at) },
-                { label: '审核人 ID', value: agent.reviewed_by ?? '—' },
-                { label: '审核时间', value: formatDate(agent.reviewed_at) },
+                { label: 'Runtime status', value: <StatusBadge status={agent.agent_status} /> },
                 {
-                  label: '审核备注',
+                  label: 'Whitelist status',
+                  value: <StatusBadge status={agent.whitelist_status} />,
+                },
+                { label: 'Registered at', value: formatDate(agent.created_at) },
+                { label: 'Last seen', value: formatDate(agent.last_seen_at) },
+                { label: 'Reviewed by ID', value: agent.reviewed_by ?? '—' },
+                { label: 'Reviewed at', value: formatDate(agent.reviewed_at) },
+                {
+                  label: 'Review remark',
                   value: <span className="whitespace-pre-wrap">{agent.remark || '—'}</span>,
                 },
               ]}
             />
           </Section>
-          <Section title="账户与模型 API Key 绑定">
+          <Section title="Account & model API key bindings">
             <p className="mb-5 text-sm text-muted-foreground">
-              同一 Kovar 用户可绑定多个 Agent，每个 Agent 使用独立的模型 API Key。此处仅展示 Key
-              标识与状态，不展示密钥。
+              One Kovar user can bind multiple Agents, and each Agent uses a separate model API key.
+              Only key identifiers and status are shown here; the secret itself is never displayed.
             </p>
             {agent.token_refresh_error && (
               <p role="status" className="mb-5 rounded-md border p-3 text-sm">
-                Token 信息暂未刷新，以下可能是本地保存的数据。请稍后刷新重试。
+                Token information has not been refreshed yet; the data below may be from local
+                storage. Refresh again shortly.
               </p>
             )}
             {(agent.status === 'DELETE_PENDING' ||
               agent.token_binding_status === 'DELETE_PENDING') && (
               <p role="status" className="mb-5 rounded-md border p-3 text-sm">
-                上游 Token 等待删除。可再次执行撤销授权以重试清理。
+                Upstream token deletion is pending. Run Revoke access again to retry cleanup.
               </p>
             )}
             <Details
               fields={[
-                { label: 'Kovar 用户 ID', value: agent.kovar_user_id ?? '未绑定' },
+                { label: 'Kovar user ID', value: agent.kovar_user_id ?? 'Not bound' },
                 {
-                  label: 'Agent 模型 API Key ID',
-                  value: agent.token_id ?? agent.kovar_token_id ?? '未绑定',
+                  label: 'Agent model API key ID',
+                  value: agent.token_id ?? agent.kovar_token_id ?? 'Not bound',
                 },
-                { label: '模型 Key 已绑定', value: agent.key_bound ? '是' : '否' },
+                { label: 'Model key bound', value: agent.key_bound ? 'Yes' : 'No' },
                 {
-                  label: '本地模型 Key 状态',
+                  label: 'Local model key status',
                   value: <StatusBadge status={agent.status ?? agent.token_binding_status} />,
                 },
-                { label: '上游模型 Key 状态值', value: agent.kovar_token_status ?? '—' },
-                { label: '模型 Key 过期时间', value: formatDate(agent.expired_at) },
-                { label: '模型 Key 剩余额度', value: formatInteger(agent.remain_quota) },
+                {
+                  label: 'Upstream model key status value',
+                  value: agent.kovar_token_status ?? '—',
+                },
+                { label: 'Model key expiry', value: formatDate(agent.expired_at) },
+                { label: 'Model key remaining quota', value: formatInteger(agent.remain_quota) },
               ]}
             />
           </Section>
         </div>
-        <Section title="访问权限操作">
+        <Section title="Access actions">
           <ReviewActions agent={agent} />
         </Section>
-        <Section title="预算策略">
+        <Section title="Budget policy">
           <BudgetForm
             key={`${agent.agent_id}:${agent.per_request_limit}:${agent.daily_limit}:${agent.monthly_limit}`}
             agentId={agent.agent_id}
@@ -135,21 +142,21 @@ export async function AgentDetailPage({ id }: { id: string }) {
             }}
           />
         </Section>
-        <Section title="使用情况">
+        <Section title="Usage">
           <Details
             fields={[
-              { label: '今日用量', value: formatInteger(agent.today_usage) },
-              { label: '本月用量', value: formatInteger(agent.month_usage) },
-              { label: '任务数', value: formatInteger(agent.task_count) },
+              { label: 'Today usage', value: formatInteger(agent.today_usage) },
+              { label: 'This month usage', value: formatInteger(agent.month_usage) },
+              { label: 'Task count', value: formatInteger(agent.task_count) },
               {
-                label: '尚无实际成本的任务数',
+                label: 'Tasks without actual cost',
                 value: formatInteger(agent.tasks_without_actual_cost),
               },
             ]}
           />
           <p className="mt-5 text-xs text-muted-foreground">
-            单位：Kovar quota
-            units。实际成本已知时使用实际值，否则计入估算值；这些数据用于预算管理。
+            Unit: Kovar quota units. Actual cost is used when known; otherwise estimates are
+            included. This data is used for budget management.
           </p>
         </Section>
       </div>

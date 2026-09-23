@@ -26,12 +26,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         href="#main-content"
         className="sr-only z-50 rounded bg-card p-3 focus:not-sr-only focus:fixed"
       >
-        跳到主要内容
+        Skip to main content
       </a>
       <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-8">
         <div className="flex items-center gap-3">
           <AdminSidebar />
-          <span className="text-sm text-muted-foreground">Agent 管理控制台</span>
+          <span className="text-sm text-muted-foreground">Agent Admin Console</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-2 text-sm">
@@ -43,7 +43,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           <form action={logout}>
             <Button variant="ghost" size="sm" type="submit">
               <LogOut />
-              <span>退出</span>
+              <span>Sign out</span>
             </Button>
           </form>
         </div>

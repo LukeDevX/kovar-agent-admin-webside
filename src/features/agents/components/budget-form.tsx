@@ -13,9 +13,9 @@ import { policySchema, type Policy } from '../schemas'
 import { updateBudget } from '../actions'
 
 const FIELDS = [
-  { key: 'per_request_limit', label: '单次请求上限' },
-  { key: 'daily_limit', label: '每日上限' },
-  { key: 'monthly_limit', label: '每月上限' },
+  { key: 'per_request_limit', label: 'Per-request limit' },
+  { key: 'daily_limit', label: 'Daily limit' },
+  { key: 'monthly_limit', label: 'Monthly limit' },
 ] as const
 
 export function BudgetForm({ agentId, policy }: { agentId: string; policy: Policy }) {
@@ -32,21 +32,21 @@ export function BudgetForm({ agentId, policy }: { agentId: string; policy: Polic
     try {
       const result = await updateBudget(agentId, values)
       if (!result.ok) {
-        setError(result.message + (result.requestId ? ` 请求编号：${result.requestId}` : ''))
+        setError(result.message + (result.requestId ? ` Request ID: ${result.requestId}` : ''))
         toast.error(result.message)
         return
       }
       reset(values)
-      toast.success('预算已更新')
+      toast.success('Budget updated')
       router.refresh()
     } catch {
-      setError('操作未完成，请刷新确认预算后重试。')
+      setError('The operation did not complete. Refresh and confirm the budget before retrying.')
     }
   }
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        单位：Kovar quota units。输入非负整数，0 表示零额度。
+        Unit: Kovar quota units. Enter a non-negative integer; 0 means zero quota.
       </p>
       <div className="grid gap-4 lg:grid-cols-3">
         {FIELDS.map(({ key, label }) => (
@@ -76,7 +76,7 @@ export function BudgetForm({ agentId, policy }: { agentId: string; policy: Polic
         </p>
       )}
       <Button type="submit" disabled={isSubmitting || !isDirty}>
-        {isSubmitting ? '保存中…' : '保存预算'}
+        {isSubmitting ? 'Saving...' : 'Save budget'}
       </Button>
     </form>
   )

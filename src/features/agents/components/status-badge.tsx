@@ -1,17 +1,17 @@
 import { cn } from '@/lib/utils'
 
 const LABELS: Record<string, string> = {
-  REGISTERED: '已注册',
-  ACTIVE: '活跃',
-  SUSPENDED: '已暂停',
-  REVOKED: '已撤销',
-  PENDING: '待审核',
-  APPROVED: '已批准',
-  REJECTED: '已拒绝',
-  CREATING: '创建中',
-  DELETE_PENDING: '待删除',
-  DELETED: '已删除',
-  UNKNOWN: '未知',
+  REGISTERED: 'Registered',
+  ACTIVE: 'Active',
+  SUSPENDED: 'Suspended',
+  REVOKED: 'Revoked',
+  PENDING: 'Pending',
+  APPROVED: 'Approved',
+  REJECTED: 'Rejected',
+  CREATING: 'Creating',
+  DELETE_PENDING: 'Delete pending',
+  DELETED: 'Deleted',
+  UNKNOWN: 'Unknown',
 }
 
 export function StatusBadge({ status }: { status: string | null | undefined }) {

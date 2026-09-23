@@ -3,19 +3,21 @@ import { test, expect, type Page } from '@playwright/test'
 const AGENT_ID = '0x1111111111111111111111111111111111111111'
 async function signIn(page: Page, username = 'admin') {
   await page.goto('/login')
-  await page.getByLabel('用户名').fill(username)
-  await page.getByLabel('密码', { exact: true }).fill('test-password')
-  await page.getByRole('button', { name: '登录管理后台' }).click()
-  await expect(page.getByRole('heading', { name: '工作台' })).toBeVisible()
+  await page.getByLabel('Username').fill(username)
+  await page.getByLabel('Password', { exact: true }).fill('test-password')
+  await page.getByRole('button', { name: 'Sign in to admin console' }).click()
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 }
 
 test('unauthenticated pages redirect and invalid credentials stay on login', async ({ page }) => {
   await page.goto('/agents')
   await expect(page).toHaveURL(/\/login$/)
-  await page.getByLabel('用户名').fill('admin')
-  await page.getByLabel('密码', { exact: true }).fill('incorrect')
-  await page.getByRole('button', { name: '登录管理后台' }).click()
-  await expect(page.getByRole('alert').filter({ hasText: '用户名或密码不正确' })).toBeVisible()
+  await page.getByLabel('Username').fill('admin')
+  await page.getByLabel('Password', { exact: true }).fill('incorrect')
+  await page.getByRole('button', { name: 'Sign in to admin console' }).click()
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Incorrect username or password.' }),
+  ).toBeVisible()
 })
 
 test('login, list, approve, exact budget update, confirmed revoke and logout', async ({
@@ -30,35 +32,36 @@ test('login, list, approve, exact budget update, confirmed revoke and logout', a
   await page.goto('/agents')
   await expect(page.getByRole('table')).toBeVisible()
   await page.getByRole('link', { name: AGENT_ID, exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Agent 详情' })).toBeVisible()
-  await page.getByRole('button', { name: '批准', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Agent details' })).toBeVisible()
+  await page.getByRole('button', { name: 'Approve', exact: true }).click()
   await expect(page.getByRole('alertdialog')).toContainText(AGENT_ID)
-  await page.getByLabel('审核备注（可选）').fill('通过审核')
-  await page.getByRole('button', { name: '确认批准' }).click()
-  await expect(page.getByRole('button', { name: '暂停', exact: true })).toBeVisible()
-  await page.getByLabel('每日上限').fill('9223372036854775807')
-  await page.getByRole('button', { name: '保存预算' }).click()
-  await expect(page.getByRole('button', { name: '保存预算' })).toBeDisabled()
+  await page.getByLabel('Review remark (optional)').fill('Approved')
+  await page.getByRole('button', { name: 'Confirm Approve' }).click()
+  await expect(page.getByRole('button', { name: 'Suspend', exact: true })).toBeVisible()
+  await page.getByLabel('Daily limit').fill('9223372036854775807')
+  await page.getByRole('button', { name: 'Save budget' }).click()
+  await expect(page.getByRole('button', { name: 'Save budget' })).toBeDisabled()
   await page.reload()
-  await expect(page.getByLabel('每日上限')).toHaveValue('9223372036854775807')
-  await page.getByRole('button', { name: '撤销授权', exact: true }).click()
-  await page.getByRole('button', { name: '取消', exact: true }).click()
-  await expect(page.getByRole('button', { name: '暂停', exact: true })).toBeVisible()
-  await page.getByRole('button', { name: '撤销授权', exact: true }).click()
-  await page.getByRole('button', { name: '确认撤销授权' }).click()
-  await expect(page.getByRole('button', { name: '重试撤销清理' })).toBeVisible()
+  await expect(page.getByLabel('Daily limit')).toHaveValue('9223372036854775807')
+  await page.getByRole('button', { name: 'Revoke access', exact: true }).click()
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Suspend', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Revoke access', exact: true }).click()
+  await page.getByRole('button', { name: 'Confirm Revoke access' }).click()
+  await expect(page.getByRole('button', { name: 'Retry revocation cleanup' })).toBeVisible()
   await expect(
     page
-      .getByText('Agent 授权已撤销，但上游 Token 删除尚未完成。可再次执行撤销授权以重试清理。', {
-        exact: true,
-      })
+      .getByText(
+        'Agent authorization has been revoked, but upstream token deletion is still pending. Run Revoke access again to retry cleanup.',
+        { exact: true },
+      )
       .first(),
   ).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   )
   await page.screenshot({ path: testInfo.outputPath('agent-detail.png'), fullPage: true })
-  await page.getByRole('button', { name: '退出', exact: true }).click()
+  await page.getByRole('button', { name: 'Sign out', exact: true }).click()
   await expect(page).toHaveURL(/\/login$/)
   await page.goto('/agents')
   await expect(page).toHaveURL(/\/login$/)
@@ -67,25 +70,34 @@ test('login, list, approve, exact budget update, confirmed revoke and logout', a
 test('whitelist filters and pagination survive reload and history', async ({ page }) => {
   await signIn(page)
   await page.goto('/whitelist?page=1&page_size=1')
-  await page.getByRole('button', { name: '下一页' }).click()
+  await page.getByRole('button', { name: 'Next page' }).click()
   await expect(page).toHaveURL(/page=2/)
-  await expect(page.getByText('暂无 Agent')).toBeVisible()
+  await expect(page.getByText('No Agents')).toBeVisible()
   await page.goBack()
   await expect(page.getByRole('table')).toBeVisible()
-  await page.getByLabel('审核状态').selectOption('APPROVED')
-  await page.getByRole('button', { name: '应用', exact: true }).click()
+  await page.getByLabel('Review status').selectOption('APPROVED')
+  await page.getByRole('button', { name: 'Apply', exact: true }).click()
   await expect(page).toHaveURL(/status=APPROVED/)
   await page.reload()
-  await expect(page.getByLabel('审核状态')).toHaveValue('APPROVED')
-  await expect(page.getByText('暂无 Agent')).toBeVisible()
+  await expect(page.getByLabel('Review status')).toHaveValue('APPROVED')
+  await expect(page.getByText('No Agents')).toBeVisible()
 })
 
 for (const scenario of [
-  { username: 'empty', message: '暂无 Agent' },
-  { username: 'failure', message: '暂时无法加载' },
-  { username: 'forbidden', message: '无权访问' },
-  { username: 'rate-limited', message: '暂时无法加载', detail: '请求过于频繁' },
-  { username: 'business-failure', message: '暂时无法加载', detail: '上游服务未接受该操作' },
+  { username: 'empty', message: 'No Agents' },
+  { username: 'failure', message: 'Unable to load' },
+  { username: 'forbidden', message: 'Access denied' },
+  {
+    username: 'rate-limited',
+    message: 'Unable to load',
+    detail: 'Too many requests. Please try again later.',
+  },
+  {
+    username: 'business-failure',
+    message: 'Unable to load',
+    detail:
+      'The upstream service rejected the operation. Refresh and confirm the status before retrying.',
+  },
 ]) {
   test(`list state: ${scenario.username}`, async ({ page }) => {
     await signIn(page, scenario.username)
@@ -105,19 +117,21 @@ for (const username of ['bound', 'stale-binding']) {
     await signIn(page, username)
     await page.goto(`/agents/${AGENT_ID}`)
     const binding = page.locator('section').filter({
-      has: page.getByRole('heading', { name: '账户与模型 API Key 绑定', exact: true }),
+      has: page.getByRole('heading', { name: 'Account & model API key bindings', exact: true }),
     })
-    await expect(binding.getByText('Kovar 用户 ID', { exact: true }).locator('..')).toContainText(
+    await expect(binding.getByText('Kovar user ID', { exact: true }).locator('..')).toContainText(
       '7',
     )
     await expect(
-      binding.getByText('Agent 模型 API Key ID', { exact: true }).locator('..'),
+      binding.getByText('Agent model API key ID', { exact: true }).locator('..'),
     ).toContainText('11')
     await expect(
-      binding.getByText('模型 Key 剩余额度', { exact: true }).locator('..'),
+      binding.getByText('Model key remaining quota', { exact: true }).locator('..'),
     ).toContainText('9,007,199,254,740,993')
     if (username === 'stale-binding') {
-      await expect(binding.getByRole('status')).toContainText('Token 信息暂未刷新')
+      await expect(binding.getByRole('status')).toContainText(
+        'Token information has not been refreshed yet',
+      )
       await expect(page).toHaveURL(new RegExp(`/agents/${AGENT_ID}$`))
     }
     // Check serialized RSC props as well as visible text.
@@ -132,7 +146,7 @@ for (const username of ['bound', 'stale-binding']) {
 test('missing agent renders the resource-not-found page', async ({ page }) => {
   await signIn(page)
   await page.goto('/agents/0x2222222222222222222222222222222222222222')
-  await expect(page.getByRole('heading', { name: '未找到页面或 Agent' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Page or Agent not found' })).toBeVisible()
 })
 
 test('expired Gateway token redirects back to login', async ({ page }) => {
@@ -147,13 +161,17 @@ test('loading, keyboard navigation and responsive sidebar', async ({
 }, testInfo) => {
   await signIn(page, 'slow')
   if (isMobile) {
-    await page.getByRole('button', { name: '打开导航' }).click()
+    await page.getByRole('button', { name: 'Open navigation' }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await page.keyboard.press('Escape')
-    await expect(page.getByRole('button', { name: '打开导航' })).toBeFocused()
+    await expect(page.getByRole('button', { name: 'Open navigation' })).toBeFocused()
   }
-  await page.getByRole('link', { name: 'Agents 查看注册信息、账户绑定、用量与预算。' }).click()
-  await expect(page.getByRole('status', { name: '正在加载页面' })).toBeVisible()
+  await page
+    .getByRole('link', {
+      name: 'Agents View registration details, account bindings, usage, and budgets.',
+    })
+    .click()
+  await expect(page.getByRole('status', { name: 'Loading page' })).toBeVisible()
   await expect(page.getByRole('table')).toBeVisible()
   await page.keyboard.press('Tab')
   expect(await page.evaluate(() => document.activeElement?.tagName)).not.toBe('BODY')

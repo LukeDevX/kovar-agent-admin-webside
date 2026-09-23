@@ -20,18 +20,19 @@ import { availableActions, reviewSchema, type Agent, type ReviewAction } from '.
 import { reviewAgent } from '../actions'
 
 const LABELS: Record<ReviewAction, string> = {
-  approve: '批准',
-  reject: '拒绝',
-  suspend: '暂停',
-  resume: '恢复',
-  revoke: '撤销授权',
+  approve: 'Approve',
+  reject: 'Reject',
+  suspend: 'Suspend',
+  resume: 'Resume',
+  revoke: 'Revoke access',
 }
 const DESCRIPTIONS: Record<ReviewAction, string> = {
-  approve: '批准后，Agent 将获得访问权限。',
-  reject: '拒绝此次申请，Agent 保持已注册状态。',
-  suspend: '暂停后，Agent 将无法通过请求认证。',
-  resume: '恢复后，Agent 可重新通过请求认证。',
-  revoke: '撤销后，Agent 将失去访问权限，并尝试删除上游 Token。已撤销的 Agent 无法恢复。',
+  approve: 'After approval, the Agent will gain access.',
+  reject: 'Reject this application; the Agent remains registered.',
+  suspend: 'After suspension, the Agent can no longer pass request authentication.',
+  resume: 'After resuming, the Agent can pass request authentication again.',
+  revoke:
+    'After revocation, the Agent loses access and the upstream token is deleted. A revoked Agent cannot be restored.',
 }
 
 function ReviewDialog({
@@ -60,7 +61,7 @@ function ReviewDialog({
     try {
       const result = await reviewAgent(agent.agent_id, action, values)
       if (!result.ok) {
-        setError(result.message + (result.requestId ? ` 请求编号：${result.requestId}` : ''))
+        setError(result.message + (result.requestId ? ` Request ID: ${result.requestId}` : ''))
         toast.error(result.message)
         return
       }
@@ -69,13 +70,15 @@ function ReviewDialog({
         toast.warning(result.warning)
       } else {
         onWarning('')
-        toast.success(`${LABELS[action]}成功`)
+        toast.success(`${LABELS[action]} completed`)
       }
       setOpen(false)
       reset()
       router.refresh()
     } catch {
-      setError('操作未完成，请刷新确认 Agent 状态后重试。')
+      setError(
+        'The operation did not complete. Refresh and confirm the Agent status before retrying.',
+      )
     }
   }
   return (
@@ -91,12 +94,14 @@ function ReviewDialog({
       <AlertDialogTrigger asChild>
         <Button variant={action === 'revoke' ? 'destructive' : 'outline'}>
           {agent.agent_status === 'REVOKED' && action === 'revoke'
-            ? '重试撤销清理'
+            ? 'Retry revocation cleanup'
             : LABELS[action]}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogTitle className="text-lg font-semibold">确认{LABELS[action]}</AlertDialogTitle>
+        <AlertDialogTitle className="text-lg font-semibold">
+          Confirm {LABELS[action]}
+        </AlertDialogTitle>
         <AlertDialogDescription className="text-sm text-muted-foreground">
           {DESCRIPTIONS[action]}
           <span className="mt-3 block break-all font-mono text-xs">{agent.agent_id}</span>
@@ -104,7 +109,7 @@ function ReviewDialog({
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
             <label htmlFor={`remark-${action}`} className="mb-2 block text-sm font-medium">
-              审核备注（可选）
+              Review remark (optional)
             </label>
             <textarea
               id={`remark-${action}`}
@@ -121,7 +126,7 @@ function ReviewDialog({
                 errors.remark ? 'text-sm text-destructive' : 'text-xs text-muted-foreground'
               }
             >
-              {errors.remark?.message ?? '最多 1000 UTF-8 字节。'}
+              {errors.remark?.message ?? 'Up to 1000 UTF-8 bytes.'}
             </p>
           </div>
           {error && (
@@ -132,7 +137,7 @@ function ReviewDialog({
           <div className="flex justify-end gap-2">
             <AlertDialogCancel asChild>
               <Button type="button" variant="outline" disabled={isSubmitting}>
-                取消
+                Cancel
               </Button>
             </AlertDialogCancel>
             <Button
@@ -140,7 +145,7 @@ function ReviewDialog({
               variant={action === 'revoke' ? 'destructive' : 'default'}
               disabled={isSubmitting}
             >
-              {isSubmitting ? '处理中…' : `确认${LABELS[action]}`}
+              {isSubmitting ? 'Processing...' : `Confirm ${LABELS[action]}`}
             </Button>
           </div>
         </form>

@@ -46,7 +46,7 @@ describe('server mutation boundaries', () => {
     vi.mocked(gateway).mockResolvedValue({ ...agentFixture, token_deletion_pending: true })
     expect(await reviewAgent(AGENT_ID, 'revoke', { remark: 'review' })).toMatchObject({
       ok: true,
-      warning: expect.stringContaining('删除尚未完成'),
+      warning: expect.stringContaining('deletion is still pending'),
     })
   })
   it('redirects expired sessions and does not invalidate on failed writes', async () => {
@@ -60,7 +60,7 @@ describe('server mutation boundaries', () => {
     vi.mocked(gateway).mockRejectedValue(new AppError('INVALID_AGENT_STATE', 409, 'trace-1'))
     expect(await reviewAgent(AGENT_ID, 'approve', { remark: '' })).toEqual({
       ok: false,
-      message: 'Agent 状态已变化，请刷新后重试。',
+      message: 'The Agent state has changed. Refresh and try again.',
       requestId: 'trace-1',
     })
   })

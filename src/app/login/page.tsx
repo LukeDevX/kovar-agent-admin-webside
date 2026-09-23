@@ -2,7 +2,7 @@ import { ShieldCheck } from 'lucide-react'
 
 import { LoginForm } from '@/features/auth/login-form'
 
-export const metadata = { title: '管理员登录' }
+export const metadata = { title: 'Admin sign in' }
 
 export default function LoginPage() {
   return (
@@ -13,8 +13,10 @@ export default function LoginPage() {
           <p className="mb-2 text-xs font-semibold tracking-widest text-muted-foreground">
             KOVAR · AGENT ADMIN
           </p>
-          <h1 className="text-2xl font-semibold">管理员登录</h1>
-          <p className="mt-2 text-sm text-muted-foreground">使用 Gateway 管理员账号访问控制台。</p>
+          <h1 className="text-2xl font-semibold">Admin sign in</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Use a Gateway admin account to access the console.
+          </p>
         </div>
         <LoginForm />
       </section>

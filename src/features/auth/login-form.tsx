@@ -14,13 +14,13 @@ export function LoginForm() {
     <form action={formAction} noValidate className="space-y-5">
       <div>
         <label htmlFor="username" className="mb-2 block text-sm font-medium">
-          用户名
+          Username
         </label>
         <Input id="username" autoComplete="username" name="username" required />
       </div>
       <div>
         <label htmlFor="password" className="mb-2 block text-sm font-medium">
-          密码
+          Password
         </label>
         <Input
           id="password"
@@ -39,7 +39,7 @@ export function LoginForm() {
         </p>
       )}
       <Button className="w-full" type="submit" disabled={isPending}>
-        {isPending ? '登录中…' : '登录管理后台'}
+        {isPending ? 'Signing in...' : 'Sign in to admin console'}
       </Button>
     </form>
   )

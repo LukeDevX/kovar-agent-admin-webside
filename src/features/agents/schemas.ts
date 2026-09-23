@@ -7,10 +7,10 @@ const INT64_MAX = 9223372036854775807n
 
 const budgetValueSchema = z
   .string()
-  .regex(/^\d+$/, '请输入非负整数')
+  .regex(/^\d+$/, 'Enter a non-negative integer')
   .refine(
     (value) => /^\d+$/.test(value) && BigInt(value) <= INT64_MAX,
-    '不能超过 9223372036854775807',
+    'Must not exceed 9223372036854775807',
   )
 export const policySchema = z.object({
   per_request_limit: budgetValueSchema,
@@ -21,7 +21,7 @@ export type Policy = z.infer<typeof policySchema>
 
 export const addressSchema = z
   .string()
-  .regex(/^0x[0-9a-fA-F]{40}$/, '请输入有效的 EVM 地址')
+  .regex(/^0x[0-9a-fA-F]{40}$/, 'Enter a valid EVM address')
   .transform((value) => value.toLowerCase())
 const whitelistStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED', 'REVOKED'])
 const agentStatusSchema = z.enum(['REGISTERED', 'ACTIVE', 'SUSPENDED', 'REVOKED'])
@@ -75,7 +75,7 @@ export const reviewSchema = z.object({
     .string()
     .refine(
       (value) => new TextEncoder().encode(value).length <= 1000,
-      '备注不能超过 1000 UTF-8 字节',
+      'The remark must not exceed 1000 UTF-8 bytes',
     ),
 })
 export const reviewResponseSchema = agentSchema.extend({

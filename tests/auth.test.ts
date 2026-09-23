@@ -42,7 +42,7 @@ describe('Gateway login session', () => {
     vi.mocked(gateway).mockRejectedValue(new AppError('FORBIDDEN', 403))
     expect(await login({ username: 'admin', password: 'password' })).toEqual({
       ok: false,
-      message: '当前账号没有操作权限。',
+      message: 'Your account does not have permission to perform this action.',
     })
     expect(cookieJar.set).not.toHaveBeenCalled()
   })

@@ -5,8 +5,11 @@ import { integerSchema } from '@/lib/api/scalars'
 const byteString = (max: number) =>
   z
     .string()
-    .min(1, '此项必填')
-    .refine((value) => new TextEncoder().encode(value).length <= max, `不能超过 ${max} UTF-8 字节`)
+    .min(1, 'This field is required')
+    .refine(
+      (value) => new TextEncoder().encode(value).length <= max,
+      `Must not exceed ${max} UTF-8 bytes`,
+    )
 
 export const loginSchema = z.object({ username: byteString(128), password: byteString(72) })
 export const adminSchema = z.object({ id: integerSchema, username: z.string() })
